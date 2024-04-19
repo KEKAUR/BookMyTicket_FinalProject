@@ -3,6 +3,7 @@ package com.capgemini.movieticketbooking.service.impl;
 import com.capgemini.movieticketbooking.exception.TheatreNotFoundException;
 import com.capgemini.movieticketbooking.model.Address;
 import com.capgemini.movieticketbooking.model.Theatre;
+import com.capgemini.movieticketbooking.repository.AddressRepository;
 import com.capgemini.movieticketbooking.repository.TheatreRepository;
 import com.capgemini.movieticketbooking.service.TheatreService;
 
@@ -17,9 +18,12 @@ public class TheatreServiceImpl implements TheatreService {
  
     @Autowired
     private TheatreRepository theatreRepository;
+    @Autowired
+    private AddressRepository addressRepository;
  
     public void addTheatre(Theatre theatre) {
-        theatreRepository.save(theatre);
+        addressRepository.save(theatre.getAddress());
+    	theatreRepository.save(theatre);
     }
  
     public List<Theatre> getAllTheatres() {
@@ -39,11 +43,22 @@ public class TheatreServiceImpl implements TheatreService {
         Optional<Theatre> optionalTheatre = theatreRepository.findById(theatreId);
         if (optionalTheatre.isPresent()) {
             Theatre existingTheatre = optionalTheatre.get();
-            existingTheatre.setTheatreName(updatedTheatre.getTheatreName());
-            existingTheatre.setAddress(updatedTheatre.getAddress());
-            // Update other fields as needed
+            
+            if(updatedTheatre.getTheatreName() != null)
+            	existingTheatre.setTheatreName(updatedTheatre.getTheatreName());
+            if(updatedTheatre.getCapacity() != 0)
+            	existingTheatre.setCapacity(updatedTheatre.getCapacity());
+            if(updatedTheatre.getAddress() != null)
+            	existingTheatre.setAddress(updatedTheatre.getAddress());
+            if(updatedTheatre.getMovieShows() != null)
+            	existingTheatre.setMovieShows(updatedTheatre.getMovieShows());
+            if(updatedTheatre.getSeats() != null)
+            	existingTheatre.setSeats(updatedTheatre.getSeats());
+            
+            addressRepository.save(updatedTheatre.getAddress());
             theatreRepository.save(existingTheatre);
-        } else {
+        } 
+        else {
             throw new TheatreNotFoundException("Theatre not found with id: " + theatreId);
         }
     }
@@ -63,15 +78,15 @@ public class TheatreServiceImpl implements TheatreService {
     }
  
     public List<Theatre> getTheatresByCity(String city) {
-        return theatreRepository.findByCity(city);
+        return theatreRepository.findByAddressCity(city);
     }
  
     public List<Theatre> getTheatresByCountry(String country) {
-        return theatreRepository.findByCountry(country);
+        return theatreRepository.findByAddressCountry(country);
     }
  
     public List<Theatre> getTheatresByState(String state) {
-        return theatreRepository.findByState(state);
+        return theatreRepository.findByAddressState(state);
     }
  
     public void updateTheatreAddressById(int theatreId, Address address) throws TheatreNotFoundException {

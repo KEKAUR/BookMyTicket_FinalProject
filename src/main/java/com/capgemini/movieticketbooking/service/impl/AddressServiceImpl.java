@@ -7,7 +7,7 @@ import com.capgemini.movieticketbooking.service.AddressService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
- 
+
 import java.util.List;
 import java.util.Optional;
  
@@ -30,7 +30,7 @@ public class AddressServiceImpl implements AddressService{
         if (optionalAddress.isPresent()) {
             return optionalAddress.get();
         } else {
-            throw new AddressNotFoundException("Address not found with id: " + addressId);
+            throw new AddressNotFoundException(String.valueOf(addressId));
         }
     }
  
@@ -46,20 +46,28 @@ public class AddressServiceImpl implements AddressService{
         if (addressRepository.existsById(addressId)) {
             addressRepository.deleteById(addressId);
         } else {
-            throw new AddressNotFoundException("Address not found with id: " + addressId);
+            throw new AddressNotFoundException(String.valueOf(addressId));
         }
     }
  
     public void updateAddressById(int addressId, Address updatedAddress) throws AddressNotFoundException {
         Optional<Address> optionalAddress = addressRepository.findById(addressId);
+       
         if (optionalAddress.isPresent()) {
             Address existingAddress = optionalAddress.get();
-            existingAddress.setAddressLine(updatedAddress.getAddressLine());
-            existingAddress.setCity(updatedAddress.getCity());
-            existingAddress.setState(updatedAddress.getState());
+            
+            if(updatedAddress.getAddressLine() != null)
+            	existingAddress.setAddressLine(updatedAddress.getAddressLine());
+            if(updatedAddress.getCity() != null)
+            	existingAddress.setCity(updatedAddress.getCity());
+            if(updatedAddress.getState() != null)
+            	existingAddress.setState(updatedAddress.getState());
+            if(updatedAddress.getCountry() != null)
+            	existingAddress.setCountry(updatedAddress.getCountry());
+            
             addressRepository.save(existingAddress);
         } else {
-            throw new AddressNotFoundException("Address not found with id: " + addressId);
+            throw new AddressNotFoundException(String.valueOf(addressId));
         }
     }
 }

@@ -1,13 +1,13 @@
 package com.capgemini.movieticketbooking.service.impl;
 
 import com.capgemini.movieticketbooking.exception.UserNotFoundException;
-import com.capgemini.movieticketbooking.model.Address;
 import com.capgemini.movieticketbooking.model.Payments;
 import com.capgemini.movieticketbooking.model.User;
 import com.capgemini.movieticketbooking.repository.UserRepository;
 import com.capgemini.movieticketbooking.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
  
 import java.util.List;
@@ -19,8 +19,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
  
-    public void addUser(User user) {
-        userRepository.save(user);
+    public User addUser(User user) {
+    	user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        return userRepository.save(user);
     }
  
     public List<User> getAllUsers() {
@@ -34,20 +35,15 @@ public class UserServiceImpl implements UserService{
  
     public void updateUserById(int userId, User user) throws UserNotFoundException {
         User existingUser = getUserById(userId);
-        // Update properties of existingUser with user
         existingUser.setUserName(user.getUserName());
         existingUser.setEmail(user.getEmail());
-        // Update other properties as needed
+        existingUser.setPhone(user.getPhone());
         userRepository.save(existingUser);
     }
  
     public void deleteUserById(int userId) throws UserNotFoundException {
-        userRepository.delete(getUserById(userId));
+        userRepository.deleteById(userId);
     }
- 
-//    public List<User> getUsersByCity(String city) {
-//        return userRepository.findByAddressCity(city);
-//    }
  
     public User getUserByEmail(String email) throws UserNotFoundException {
         return userRepository.findByEmail(email)

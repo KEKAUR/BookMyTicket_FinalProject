@@ -1,111 +1,47 @@
 package com.capgemini.movieticketbooking.model;
 
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-@Getter
-@Setter
+
+@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "address")
 public class Address {
 
-	@Id
-	@GeneratedValue
-	@Column(name = "address_id")
-	private int addressId;
-	
-	@Column(name = "country")
-	private String country;
-	
-	@Column(name = "state")
-	private String state;
-	
-	@Column(name = "city")
-	private String city;
-	
-	@Column(name = "address_line")
-	private String addressLine;
-//
-	@OneToOne(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JsonIgnore
-	private Theatre theatres;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int addressId; 
 
-	public Address() {
-	}
+    @NotBlank(message = "Country cannot be blank")
+    private String country;
 
-	public Address(int addressId, String country, String state, String city, String addressLine, Theatre theatres) {
-		super();
-		this.addressId = addressId;
-		this.country = country;
-		this.state = state;
-		this.city = city;
-		this.addressLine = addressLine;
-		this.theatres = theatres;
-	}
+    @NotBlank(message = "State cannot be blank")
+    private String state;
 
-	public int getAddressId() {
-		return addressId;
-	}
+    @NotBlank(message = "City cannot be blank")
+    private String city;
 
-	public void setAddressId(int addressId) {
-		this.addressId = addressId;
-	}
+    @NotBlank(message = "Address line cannot be blank")
+    @Size(max = 255, message = "Address line must be less than 255 characters")
+    private String addressLine;
 
-	public String getCountry() {
-		return country;
-	}
+    @OneToMany(mappedBy = "address", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Theatre> theatres;
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getAddressLine() {
-		return addressLine;
-	}
-
-	public void setAddressLine(String addressLine) {
-		this.addressLine = addressLine;
-	}
-
-	public Theatre getTheatres() {
-		return theatres;
-	}
-
-	public void setTheatres(Theatre theatres) {
-		this.theatres = theatres;
-	}
-
-
-
-	
 }

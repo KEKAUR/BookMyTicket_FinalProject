@@ -9,7 +9,7 @@ public interface PaymentService {
 
 	List<Payments> getAllPayments();
 
-	void addPayment(Payments payment);
+	Payments addPayment(Payments payment);
 
 	Payments getPaymentById(int paymentId) throws PaymentNotFoundException;
 

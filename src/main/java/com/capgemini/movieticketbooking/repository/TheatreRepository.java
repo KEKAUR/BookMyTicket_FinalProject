@@ -4,25 +4,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.capgemini.movieticketbooking.model.Theatre;
 
+@Repository
 public interface TheatreRepository extends JpaRepository<Theatre, Integer>{
-
-	@Query("SELECT t FROM Theatre t WHERE t.theatreName = :theatreName")
+                   
 	Optional<Theatre> findByTheatreName(String theatreName);
 
-	@Query("SELECT t FROM Theatre t JOIN t.address a WHERE a.city = :city")
-	List<Theatre> findByAddressCity(String city);
+    List<Theatre> findByAddressCity(String city);
 
-	@Query("SELECT t FROM Theatre t JOIN t.address a WHERE a.country = :country")
-	List<Theatre> findByCountry(String country);
-	
-	@Query("SELECT t FROM Theatre t JOIN t.address a WHERE a.city = :city")
-	List<Theatre> findByCity(String city);
+	List<Theatre> findByAddressState(String state);
 
-	@Query("SELECT t FROM Theatre t JOIN t.address a WHERE a.state = :state")
-	List<Theatre> findByState(String state);
+	List<Theatre> findByAddressCountry(String country);  
+	  
 
 }

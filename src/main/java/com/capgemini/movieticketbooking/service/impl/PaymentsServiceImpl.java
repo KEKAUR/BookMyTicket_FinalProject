@@ -17,8 +17,8 @@ public class PaymentsServiceImpl implements PaymentService {
     @Autowired
     private PaymentsRepository paymentRepository;
  
-    public void addPayment(Payments payment) {
-        paymentRepository.save(payment);
+    public Payments addPayment(Payments payment) {
+        return paymentRepository.save(payment);
     }
  
     public List<Payments> getAllPayments() {

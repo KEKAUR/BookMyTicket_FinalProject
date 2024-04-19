@@ -7,7 +7,7 @@ import com.capgemini.movieticketbooking.model.Address;
 
 public interface AddressService {
 
-	void addAddress(Address address) throws AddressNotFoundException;
+	void addAddress(Address address);
 
 	List<Address> getAllAddresses() throws AddressNotFoundException;
 
